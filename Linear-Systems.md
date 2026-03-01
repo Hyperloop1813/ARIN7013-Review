@@ -299,7 +299,7 @@ x_1 + 2x_2 = 5 \\
 
 **存在性与唯一性定理（Existence and Uniqueness of LU Decomposition）**
 - **存在性条件**：
-  设 $\mathbb{A}$ 是 $n$ 阶方阵，若其前 $(n-1)$ 个**顺序主子式（leading principal minors）**均非零，则 $\mathbb{A}$ 存在 LU 分解。
+  设 $\mathbb{A}$ 是 $n$ 阶方阵，若其前 $(n-1)$ 个**顺序主子式（leading principal minors）** 均非零，则 $\mathbb{A}$ 存在 LU 分解。
 
 - **唯一性条件**：
   若 $\det(\mathbb{A}) \neq 0$，且 $\mathbb{L}$ 为**单位下三角矩阵**（即主对角线元素 $\ell_{ii} = 1$），则 LU 分解是唯一的。

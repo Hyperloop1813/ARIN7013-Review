@@ -1,4 +1,4 @@
-# Midterm Review
+# Midterm Review - summarized by Hyperloop
 # 1 Convolutional Neural Network
 ## 填充
 | 填充类型 | 效果 | 输出尺寸示例 |
@@ -98,3 +98,71 @@
 ![1771579770551](image/Kernel-Operators/1771579770551.png)
 ![1771579795170](image/Kernel-Operators/1771579795170.png)
 ![1771579806566](image/Kernel-Operators/1771579806566.png)
+
+---
+
+# 4 Direct Method for Solving Linear Systems
+## 4.1 Gaussian Elimination Method
+![1772283517415](image/Midterm-Review/1772283517415.png)
+![1772283570916](image/Midterm-Review/1772283570916.png)
+![1772283583557](image/Midterm-Review/1772283583557.png)
+![1772283619973](image/Midterm-Review/1772283619973.png)
+![1772283636856](image/Midterm-Review/1772283636856.png)
+![1772283687519](image/Midterm-Review/1772283687519.png)
+![1772283734744](image/Midterm-Review/1772283734744.png)
+![1772283745055](image/Midterm-Review/1772283745055.png)
+
+## 4.2 LU Factorization
+![1772283786694](image/Midterm-Review/1772283786694.png)
+![1772283833431](image/Midterm-Review/1772283833431.png)
+![1772283897150](image/Midterm-Review/1772283897150.png)
+![1772283849115](image/Midterm-Review/1772283849115.png)
+![1772283923683](image/Midterm-Review/1772283923683.png)
+![1772283994502](image/Midterm-Review/1772283994502.png)
+![1772284029292](image/Midterm-Review/1772284029292.png)
+![1772284066180](image/Midterm-Review/1772284066180.png)
+![1772284087640](image/Midterm-Review/1772284087640.png)
+![1772284101767](image/Midterm-Review/1772284101767.png)
+
+## 4.3 Stability Analysis
+![1772284164775](image/Midterm-Review/1772284164775.png)
+![1772284180386](image/Midterm-Review/1772284180386.png)
+![1772284216988](image/Midterm-Review/1772284216988.png)
+![1772284227712](image/Midterm-Review/1772284227712.png)
+![1772284253913](image/Midterm-Review/1772284253913.png)
+![1772284279575](image/Midterm-Review/1772284279575.png)
+![1772284292820](image/Midterm-Review/1772284292820.png)
+![1772284315111](image/Midterm-Review/1772284315111.png)
+![1772284337300](image/Midterm-Review/1772284337300.png)
+![1772284350110](image/Midterm-Review/1772284350110.png)
+![1772284374006](image/Midterm-Review/1772284374006.png)
+![1772284408164](image/Midterm-Review/1772284408164.png)
+![1772284384446](image/Midterm-Review/1772284384446.png)
+![1772284420648](image/Midterm-Review/1772284420648.png)
+
+---
+
+# 5 Sparse Matrix and Iterative Solvers
+## 5.1 Sparse matrix
+![1772361209265](image/Midterm-Review/1772361209265.png)
+
+## 5.2 Splitting-based Iterative Methods
+![1772361292610](image/Midterm-Review/1772361292610.png)
+![1772361337753](image/Midterm-Review/1772361337753.png)
+![1772361449146](image/Midterm-Review/1772361449146.png)
+![1772361462943](image/Midterm-Review/1772361462943.png)
+![1772361550914](image/Midterm-Review/1772361550914.png)
+![1772361481912](image/Midterm-Review/1772361481912.png)
+![1772365940065](image/Midterm-Review/1772365940065.png)
+![1772365959201](image/Midterm-Review/1772365959201.png)
+![1772361630273](image/Midterm-Review/1772361630273.png)
+![1772361642622](image/Midterm-Review/1772361642622.png)
+![1772365973585](image/Midterm-Review/1772365973585.png)
+![1772365982513](image/Midterm-Review/1772365982513.png)
+![1772366002406](image/Midterm-Review/1772366002406.png)
+![1772366064908](image/Midterm-Review/1772366064908.png)
+![1772366077365](image/Midterm-Review/1772366077365.png)
+
+---
+
+# 6 Singular Value Decomposition
