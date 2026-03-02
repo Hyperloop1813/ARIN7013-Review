@@ -34,7 +34,15 @@
 # Assignment 2
 ## Question 1
 ![1772200145406](image/Midterm-Exercise/1772200145406.png)
-
+![1772368431963](image/Midterm-Exercise/1772368431963.png)
+![1772368450773](image/Midterm-Exercise/1772368450773.png)
+![1772368465077](image/Midterm-Exercise/1772368465077.png)
+![1772368480827](image/Midterm-Exercise/1772368480827.png)
+![1772368491090](image/Midterm-Exercise/1772368491090.png)
+![1772368501896](image/Midterm-Exercise/1772368501896.png)
+![1772368524914](image/Midterm-Exercise/1772368524914.png)
+## Question 1 (Ans in 2025 Q1)
+![1772372246000](image/Midterm-Exercise/1772372246000.png)
 
 ---
 # Final 2025
@@ -54,7 +62,12 @@
 ![1772352635273](image/Midterm-Exercise/1772352635273.png)
 ![1772352646748](image/Midterm-Exercise/1772352646748.png)
 
-## Question 2 
+## Question 2
+![1772375993871](image/Midterm-Exercise/1772375993871.png)
+![1772376012247](image/Midterm-Exercise/1772376012247.png)
+
+## Question 3
+![1772378450372](image/Midterm-Exercise/1772378450372.png)
 
 ## Question 5
 ![1772343986818](image/Midterm-Exercise/1772343986818.png)

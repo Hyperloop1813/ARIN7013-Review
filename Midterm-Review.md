@@ -151,7 +151,10 @@
 ![1772361337753](image/Midterm-Review/1772361337753.png)
 ![1772361449146](image/Midterm-Review/1772361449146.png)
 ![1772361462943](image/Midterm-Review/1772361462943.png)
+![1772424484545](image/Midterm-Review/1772424484545.png)
+![1772424562684](image/Midterm-Review/1772424562684.png)
 ![1772361550914](image/Midterm-Review/1772361550914.png)
+![1772424511887](image/Midterm-Review/1772424511887.png)
 ![1772361481912](image/Midterm-Review/1772361481912.png)
 ![1772365940065](image/Midterm-Review/1772365940065.png)
 ![1772365959201](image/Midterm-Review/1772365959201.png)
@@ -166,3 +169,13 @@
 ---
 
 # 6 Singular Value Decomposition
+![1772423722904](image/Midterm-Review/1772423722904.png)
+![1772423750653](image/Midterm-Review/1772423750653.png)
+![1772423807761](image/Midterm-Review/1772423807761.png)
+![1772423815682](image/Midterm-Review/1772423815682.png)
+![1772423823469](image/Midterm-Review/1772423823469.png)
+![1772423841629](image/Midterm-Review/1772423841629.png)
+![1772423880654](image/Midterm-Review/1772423880654.png)
+![1772423917984](image/Midterm-Review/1772423917984.png)
+![1772424059306](image/Midterm-Review/1772424059306.png)
+![1772424071640](image/Midterm-Review/1772424071640.png)
