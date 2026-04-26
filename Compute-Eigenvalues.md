@@ -1,5 +1,4 @@
-# Chapter 3 Compute Eigenvalues and Eigenvectors
-
+# Chapter 3-1 Compute Eigenvalues and Eigenvectors
 
 # 1 Rayleigh quotient
 ## 1.1 实对称矩阵的核心性质
@@ -315,3 +314,45 @@ $$
 2. **反幂法 (Inverse iteration)**：每步需要求解线性系统。表面上看需要 $\mathcal{O}(m^3)$ 次运算，但由于偏移量 $\mu$ 是固定的，可以通过提前对矩阵进行 LU 或 QR 分解进行预处理，将每步迭代的复杂度降至 $\mathcal{O}(m^2)$。
 3. **瑞利商迭代 (Rayleigh quotient iteration)**：**解答了算法 3 的复杂度问题**。因为在每一步迭代中，需要求逆的矩阵 $(\mathbb{A} - \lambda^{(k-1)}\mathbb{I})$ 都在随着 $\lambda^{(k-1)}$ 变化，因此无法像反幂法那样通过一次预处理一劳永逸。在不采用特殊优化的情况下，每步迭代的复杂度难以突破 $\mathcal{O}(m^3)$ 次浮点运算。
 
+# 3 瑞利商最大化与拉格朗日乘子法
+
+## 3.1 核心动机与瑞利商的尺度不变性 (Recall & Invariance)
+在特征值计算中，**瑞利商 (Rayleigh quotient)** 的最大值由对应最大特征值的特征向量取得。我们可以通过拉格朗日乘子法来证明这一结论。
+
+**尺度不变性 (Scale Invariance)**：
+瑞利商对于向量的缩放是不变的。对于任意标量 $c \in \mathbb{R}$：
+$$R(\mathbb{M}, c\mathbf{x}) = \frac{\langle \mathbb{M}(c\mathbf{x}), c\mathbf{x} \rangle}{\langle c\mathbf{x}, c\mathbf{x} \rangle} = \frac{c^2 \langle \mathbb{M}\mathbf{x}, \mathbf{x} \rangle}{c^2 \langle \mathbf{x}, \mathbf{x} \rangle} = R(\mathbb{M}, \mathbf{x})$$
+正是由于这种尺度不变性，我们在研究使其最大化/最小化的条件时，只需考虑单位向量这一特例，即加上等式约束：$\|\mathbf{x}\|^2 = \mathbf{x}^T\mathbf{x} = 1$。
+
+## 3.2 拉格朗日乘子法基础 (Method of Lagrange Multipliers)
+拉格朗日乘子法是一种在**等式约束**条件下寻找函数局部极值（极大值或极小值）的策略。
+对于目标函数 $f(x)$ 和等式约束 $g(x) = 0$，构造拉格朗日函数：
+$$\mathcal{L}(x, \lambda) = f(x) + \lambda g(x)$$
+通过求解该函数关于 $x$ 和乘子 $\lambda$ 的驻点（即所有偏导数等于 0 的点），即可找到极值候选点。
+
+## 3.3 优化瑞利商的具体推导 (Maximize the Rayleigh quotient)
+我们将上述方法应用于寻找瑞利商的临界点。
+
+* **目标函数**：$R(\mathbb{M}, \mathbf{x}) = \mathbf{x}^T\mathbb{M}\mathbf{x}$
+* **约束条件**：$\|\mathbf{x}\|^2 = \mathbf{x}^T\mathbf{x} = 1$ (即 $\mathbf{x}^T\mathbf{x} - 1 = 0$)
+* **构建拉格朗日函数**：
+    $$\mathcal{L}(\mathbf{x}, \lambda) = \mathbf{x}^T\mathbb{M}\mathbf{x} - \lambda(\mathbf{x}^T\mathbf{x} - 1)$$
+    *(其中 $\lambda$ 为拉格朗日乘子)*
+
+**求解驻点**：
+令 $\mathcal{L}(\mathbf{x}, \lambda)$ 对 $\mathbf{x}$ 的梯度为 0：
+$$\nabla_{\mathbf{x}}\mathcal{L}(\mathbf{x}, \lambda) = 0$$
+$$\Rightarrow 2\mathbf{x}^T\mathbb{M} - 2\lambda\mathbf{x}^T = 0$$
+$$\Rightarrow 2\mathbb{M}\mathbf{x} - 2\lambda\mathbf{x} = 0$$
+$$\Rightarrow \mathbb{M}\mathbf{x} = \lambda\mathbf{x}$$
+**结论 1**：瑞利商的驻点正好满足特征值方程！这意味着驻点必定是矩阵 $\mathbb{M}$ 的特征向量。
+
+**计算驻点处的函数值**：
+在这些驻点上，瑞利商的值为：
+$$R(\mathbb{M}, \mathbf{x}) = \frac{\langle \mathbb{M}\mathbf{x}, \mathbf{x} \rangle}{\langle \mathbf{x}, \mathbf{x} \rangle} = \frac{\langle \lambda\mathbf{x}, \mathbf{x} \rangle}{\langle \mathbf{x}, \mathbf{x} \rangle} = \lambda$$
+**结论 2**：在驻点处，瑞利商的值恰好等于对应的特征值 $\lambda$。
+
+## 3.4 总结与重要应用 (Summary)
+1.  矩阵 $\mathbb{M}$ 的**特征向量** $\mathbf{x}_1, \dots, \mathbf{x}_n$ 正是瑞利商的**临界点 (critical points)**。
+2.  它们对应的**特征值** $\lambda_1, \dots, \lambda_n$ 则是拉格朗日函数 $\mathcal{L}$ 的**驻值 (stationary values)**。
+3.  **🌟 在 AI 中的应用拓展**：将特征值问题转化为带约束的优化问题，这一数学性质是机器学习中**主成分分析 (PCA)** 和**典型相关分析 (Canonical Correlation)** 等降维/表征学习算法的底层理论基础。
