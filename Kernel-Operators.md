@@ -495,9 +495,6 @@ $$\nabla F = \frac{2}{n} \mathbb{K} ((\mathbb{K} + \lambda n \mathbb{I})\alpha -
 由于正则化系数 $\lambda > 0$ 且 $\mathbb{K}$ 是半正定矩阵，矩阵 $(\mathbb{K} + \lambda n \mathbb{I})$ 必定可逆。令 $\nabla F = \mathbf{0}$，得出最优解 $\alpha$ 的形式为：
 $$\alpha = (\mathbb{K} + \lambda n \mathbb{I})^{-1} y + \text{Ker}(\mathbb{K})$$
 
-#### 补充：详细推导步骤 (Detailed Derivation)
-
-为了让您更清晰地理解上述结论是如何得出的，以下是完整的、不跳步的数学推导过程：
 
 #### 第一步：展开目标函数 $F(\alpha)$
 首先，我们将经验风险（均方误差）部分展开：
@@ -521,6 +518,7 @@ $$F(\alpha) = \frac{1}{n} (\alpha^T \mathbb{K}^2 \alpha - 2y^T \mathbb{K} \alpha
 
 将所有求导结果相加：
 $$\nabla F = \frac{1}{n} (2\mathbb{K}^2 \alpha - 2\mathbb{K}y) + 2\lambda \mathbb{K}\alpha$$
+
 
 提取公因式 $\frac{2}{n}\mathbb{K}$：
 $$\nabla F = \frac{2}{n}\mathbb{K}^2 \alpha - \frac{2}{n}\mathbb{K}y + \frac{2\lambda n}{n}\mathbb{K}\alpha$$
