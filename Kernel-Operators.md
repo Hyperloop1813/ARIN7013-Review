@@ -1,5 +1,4 @@
 # Chapter 1 Convolution operators and kernel operators
-**最头疼的一集**
 
 # 1 Convolutional Neural Network
 ## 1.1 维卷积与互相关（Cross-correlation）
@@ -176,8 +175,12 @@ K: \chi \times \chi \to \mathbb{R}
    \sum_{i=1}^N \sum_{j=1}^N a_i a_j K(x^i, x^j) \geq 0
    \]
 
+![1778744874617](image/Kernel-Operators/1778744874617.png)
+
 
 ### 2.3.2 正定核的相似性矩阵（Similarity Matrices）
+
+![1778745224375](image/Kernel-Operators/1778745224375.png)
 
 #### 等价条件
 一个核 \(K\) 是正定的 **当且仅当**：  
@@ -191,28 +194,361 @@ K: \chi \times \chi \to \mathbb{R}
 - 核方法算法以这样的相似性矩阵作为输入。
 - 矩阵的每个元素 \(K(x^i, x^j)\) 表示数据点 \(x^i\) 和 \(x^j\) 在高维特征空间中的内积。
 
+
+### 2.3.3 正定核的常见示例 (Examples)
+
+#### 最简单的正定核
+* **针对实数 (For real numbers)**:
+    设 $\chi = \mathbb{R}$。定义函数为两个实数相乘：
+    $$\forall(x, x') \in \chi^2 : K(x, x') = xx'$$
+    这是一个正定核。
+* **针对向量 (For vectors)**:
+    设 $\chi = \mathbb{R}^d$。定义函数为两个向量的内积：
+    $$\forall(x, x') \in \chi^2 : K(x, x') = \langle x, x' \rangle_\chi$$
+    这是一个正定核，通常被称为**线性核 (Linear kernel)**。
+
+#### 引入特征映射的核 (A more ambitious p.d. kernel)
+如果 $\chi$ 是任意集合，且存在一个特征映射 $\phi: \chi \rightarrow \mathbb{R}^d$ 将其映射到向量空间。那么定义在该映射内积上的函数也是正定核：
+$$\forall(x, x') \in \chi^2 : K(x, x') = \langle \phi(x), \phi(x') \rangle_{\mathbb{R}^d}$$
+
+#### 多项式核示例 (Polynomial kernel)
+* **设定**: $\chi := \mathbb{R}^2$
+* **特征映射 $\phi$**: $\phi: \chi \rightarrow \mathbb{R}^3$ 定义为：
+    $$\phi(x_1, x_2) = (x_1^2, \sqrt{2}x_1x_2, x_2^2)$$
+* **核函数推导**:
+    $$K(x, x') = \langle \phi(x), \phi(x') \rangle_{\mathbb{R}^3} = \langle x, x' \rangle_{\mathbb{R}^2}^2$$
+    这个函数 $K$ 也是一个正定核。它展示了如何在低维空间 $\mathbb{R}^2$ 中计算内积的平方，等效于在高维空间 $\mathbb{R}^3$ 中进行特征映射后的内积计算（这就是核技巧/Kernel Trick 的核心思想）。
+
+### 2.3.4 正定核的组合性质 (Combining kernels)
+
+![1778746190935](image/Kernel-Operators/1778746190935.png)
+在已知一些基础正定核的情况下，可以通过特定的数学操作组合出新的正定核。课件给出了以下重要定理：
+
+#### 基础组合定理
+如果 $K_1$ 和 $K_2$ 都是正定核 (p.d. kernels)，那么以下组合也是正定核：
+*   **相加**: $K_1 + K_2$
+*   **相乘**: $K_1K_2$
+*   **非负标量乘法**: $cK_1$ （其中 $c \ge 0$）
+
+#### 极限收敛定理
+如果存在一个正定核序列 $\{K_i\}_{i \ge 1}$，且该序列**逐点收敛 (converges pointwisely)** 到一个函数 $K$，即：
+$$\forall(x, x') \in \mathcal{X}^2, \quad K(x, x') = \lim_{n \rightarrow \infty} K_i(x, x')$$
+那么，这个极限函数 $K$ 也是一个正定核。
+
+
+### 2.3.5 指数核定理 (Exponential Kernel Theorem)
+
+#### 定理内容
+如果 $K$ 是一个正定核，那么它的指数形式 $e^K$ 也是一个正定核。
+
+#### 证明逻辑 (Proof)
+这个定理的证明完美地运用了上一节的“组合性质”。利用泰勒展开（麦克劳林级数），可以将 $e^{K(x, x')}$ 展开为：
+$$e^{K(x, x')} = \lim_{n \rightarrow \infty} \sum_{i=0}^n \frac{K(x, x')^i}{i!}$$
+
+**推导过程解析：**
+1.  **幂次正定**：因为 $K$ 是正定核，根据“相乘”性质，它的任意次幂 $K(x, x')^i$ 也是正定核。
+2.  **标量乘法正定**：$\frac{1}{i!}$ 是一个大于 $0$ 的常数，根据“非负标量乘法”性质，$\frac{K(x, x')^i}{i!}$ 是正定核。
+3.  **相加正定**：根据“相加”性质，前 $n$ 项的和 $\sum_{i=0}^n \frac{K(x, x')^i}{i!}$ 是正定核。
+4.  **极限正定**：最后，根据“极限收敛定理”，当 $n \rightarrow \infty$ 时的极限 $e^{K(x, x')}$ 依然是正定核。
+
+
+#### 练习解析 (Exercise)
+
+**题目**：证明对于任意 $d \in \mathbb{N}$，函数 $\langle x, x' \rangle_{\mathbb{R}^p}^d$ 在定义域 $\chi = \mathbb{R}^p$ 上是正定核。
+
+**证明解析**：
+1. 我们已知两个向量的内积 $\langle x, x' \rangle_{\mathbb{R}^p}$ 是一个基础的正定核（即线性核）。
+2. 根据正定核的“组合定理”中的**相乘性质 (If $K_1, K_2$ are p.d., then $K_1K_2$ is p.d.)**，一个正定核自身与自身相乘依然是正定核。
+3. 将内积核自身连乘 $d$ 次，即得到 $\langle x, x' \rangle_{\mathbb{R}^p}^d$。
+4. 因此，通过数学归纳法或直接应用乘积性质，即可证明对于任意自然数 $d$，该多项式核依然是正定核。
+
+
+## 2.4 隋唐测验 (Quiz) 解析：以下哪些是正定核 (p.d. kernels)？
+![1778745798870](image/Kernel-Operators/1778745798870.png)
+针对课件中给出的四个核函数，我们通过正定核的构造性质来进行逐一分析和判断：
+
+### 1. $\mathcal{X} = (-1, 1), \quad K(x, x') = \frac{1}{1 - xx'}$
+*   **判断结论：是正定核 (Yes)**
+*   **解析过程**：
+    因为 $x, x' \in (-1, 1)$，所以绝对值 $|xx'| < 1$。我们可以利用几何级数（泰勒展开）将其展开：
+    $$K(x, x') = \frac{1}{1 - xx'} = \sum_{n=0}^{\infty} (xx')^n = 1 + xx' + (xx')^2 + (xx')^3 + \cdots$$
+    由于展开式可以写成 $\sum_{n=0}^{\infty} x^n (x')^n$，这相当于定义了一个无穷维的特征映射 $\phi(x) = (1, x, x^2, x^3, \cdots)$，而 $K(x, x')$ 正好是 $\langle \phi(x), \phi(x') \rangle$ 的内积。因此，它是正定核。
+
+### 2. $\mathcal{X} = \mathbb{N}, \quad K(x, x') = 2^{x+x'}$
+*   **判断结论：是正定核 (Yes)**
+*   **解析过程**：
+    利用指数的性质，可以将其分解为两个独立部分的乘积：
+    $$K(x, x') = 2^{x} \cdot 2^{x'}$$
+    我们可以定义一个一维的特征映射 $\phi(x) = 2^x$。那么 $K(x, x') = \phi(x)\phi(x')$，这完全符合一维向量内积的定义。因此，它是正定核。
+
+### 3. $\mathcal{X} = \mathbb{N}, \quad K(x, x') = 2^{xx'}$
+*   **判断结论：是正定核 (Yes)**
+*   **解析过程**：
+    利用对数恒等式，我们可以将其改写为以 $e$ 为底的指数函数：
+    $$K(x, x') = e^{(\ln 2) xx'}$$
+    我们已知 $xx'$ 是一个最基础的正定核（线性核）。因为 $\ln 2 > 0$，所以 $(\ln 2)xx'$ 也是正定核。
+    根据正定核的性质：**正定核的指数函数依然是正定核**（因为 $e^z = 1 + z + \frac{z^2}{2!} + \cdots$，各项系数均为正，且正定核的幂和加和依然正定）。因此，$2^{xx'}$ 也是正定核。
+
+### 4. $\mathcal{X} = \mathbb{R}_+, \quad K(x, x') = \log(1 + xx')$
+*   **判断结论：不是正定核 (No)**
+*   **解析过程**：
+    要证明它不是正定核，我们只需要找出一个反例，即构造一个不满足半正定性质的相似度矩阵（Gram 矩阵）。
+    我们从定义域 $\mathbb{R}_+$ 中选取两个点：$x_1 = 1, x_2 = 10$。
+    计算对应的 $2 \times 2$ Gram 矩阵 $K$：
+    $$K = \begin{bmatrix} \log(1+1\times1) & \log(1+1\times10) \\ \log(1+10\times1) & \log(1+10\times10) \end{bmatrix} = \begin{bmatrix} \log(2) & \log(11) \\ \log(11) & \log(101) \end{bmatrix}$$
+    计算该矩阵的行列式：
+    $$\det(K) = \log(2) \cdot \log(101) - (\log(11))^2 \approx (0.693 \times 4.615) - (2.397)^2 \approx 3.198 - 5.745 < 0$$
+    因为矩阵的行列式小于 0，说明该矩阵存在负的特征值，**不是半正定矩阵**。因此，该函数不满足正定核的条件。
+    *(直觉提示：如果对其进行泰勒展开 $\log(1+z) = z - z^2/2 + z^3/3 - \cdots$，出现的负系数也暗示了它可能无法保持正定性。)*
+
+## 2.5 常见核函数与泰勒展开性质总结
+
+在核方法理论中，假设内积 $z = \langle x, x' \rangle = x^T x'$，若一个标量函数 $f(z)$ 的泰勒级数（麦克劳林级数）展开式为 $f(z) = \sum_{n=0}^{\infty} a_n z^n$，且**所有系数 $a_n \ge 0$**，则由该函数构造的 $K(x, x') = f(x^T x')$ 必然是正定核（Positive Definite Kernel, p.d. kernel）。
+
+以下是常见核函数的性质汇总表：
+
+| 核函数名称 (Kernel) | 函数表达式 $K(x, x')$ | 对应单变量函数 $f(z)$ (设 $z = x^T x'$) | 泰勒展开 / 级数形式 | 展开系数特征 | 是否为正定核 (p.d.) |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **线性核 (Linear)** | $x^T x'$ | $f(z) = z$ | $f(z) = z$ | $a_1 = 1$, 其余为 $0$ ($a_n \ge 0$) | **是** |
+| **多项式核 (Polynomial)** | $(\gamma x^T x' + c)^d$ <br> $(\gamma>0, c \ge 0, d \in \mathbb{N}^+)$ | $f(z) = (\gamma z + c)^d$ | $f(z) = \sum_{k=0}^{d} \binom{d}{k} (\gamma z)^k c^{d-k}$ | 二项式展开，所有系数 $\ge 0$ | **是** |
+| **指数核 (Exponential)** | $e^{\gamma x^T x'}$ <br> $(\gamma > 0)$ | $f(z) = e^{\gamma z}$ | $f(z) = \sum_{n=0}^{\infty} \frac{\gamma^n}{n!} z^n$ | 所有项系数 $\frac{\gamma^n}{n!} > 0$ | **是** |
+| **几何级数核 (Geometric)** | $\frac{1}{1 - x^T x'}$ <br> (定义域需满足 $\|x\|<1$) | $f(z) = \frac{1}{1 - z}$ | $f(z) = \sum_{n=0}^{\infty} z^n$ | 所有项系数 $a_n = 1 > 0$ | **是** |
+| **对数核 (Logarithmic)** | $\log(1 + x^T x')$ | $f(z) = \log(1+z)$ | $f(z) = z - \frac{z^2}{2} + \frac{z^3}{3} - \dots$ | 系数正负交替，存在负系数 | **否** |
+| **Sigmoid 核 (Tanh)** | $\tanh(\gamma x^T x' + c)$ | $f(z) = \tanh(\gamma z + c)$ | 包含奇数次幂且系数正负交替 | 存在负系数 | **否** (仅在极特定参数下半正定) |
+
+### 💡 重点扩展：高斯核 (RBF Kernel) 的特殊证明
+
+高斯径向基核 $K(x, x') = e^{-\gamma \|x - x'\|^2}$ ($\gamma > 0$) 虽然不能直接写成纯粹的 $f(x^T x')$ 的形式，但它的正定性完美依赖于指数函数的泰勒展开性质：
+
+1. **展开欧氏距离**：$\|x - x'\|^2 = \|x\|^2 + \|x'\|^2 - 2x^T x'$
+2. **代入核函数**：$K(x, x') = e^{-\gamma \|x\|^2} \cdot e^{-\gamma \|x'\|^2} \cdot e^{2\gamma x^T x'}$
+3. **结合闭包性质分析**：
+   * 核心项 $e^{2\gamma x^T x'}$ 可以看作 $f(z) = e^{2\gamma z}$，其泰勒展开系数全为正，因此是**正定核**。
+   * 前后的 $e^{-\gamma \|x\|^2}$ 和 $e^{-\gamma \|x'\|^2}$ 相当于形式为 $g(x)g(x')$ 的标量函数乘积。
+   * 根据**正定核的乘法封闭性质**：如果 $K_1(x, x')$ 是正定核，那么对于任意函数 $g(x)$，$g(x)K_1(x, x')g(x')$ 依然是正定核。
+
+**结论**：高斯核是高度无限维特征映射的内积，其正定性的核心根基依然是 $e^z$ 的泰勒级数展开所有系数为正。
+
 ---
 
-# 3 基于核的监督学习
+# 3 基于核的监督学习 Kernel methods in supervised learning
 
 ## 3.1 基于核的监督学习
-该算法将监督学习问题统一为以下三个步骤：
 ![1771577651570](image/Kernel-Operators/1771577651570.png)
 ![1771577665762](image/Kernel-Operators/1771577665762.png)
 
-## 3.2 一般函数空间上的最小二乘回归
-![1771577723987](image/Kernel-Operators/1771577723987.png)
+## 3.2 核技巧 (The Kernel Trick)
 
-## 3.3 核岭回归（Kernel Ridge Regression, KRR）
-![1771577879452](image/Kernel-Operators/1771577879452.png)
-![1771577929185](image/Kernel-Operators/1771577929185.png)
-![1771577960021](image/Kernel-Operators/1771577960021.png)
-![1771578971915](image/Kernel-Operators/1771578971915.png)
-![1771579002036](image/Kernel-Operators/1771579002036.png)
-![1771579027010](image/Kernel-Operators/1771579027010.png)
-![1771579049127](image/Kernel-Operators/1771579049127.png)
-![1771579698931](image/Kernel-Operators/1771579698931.png)
-![1771579758342](image/Kernel-Operators/1771579758342.png)
-![1771579770551](image/Kernel-Operators/1771579770551.png)
-![1771579795170](image/Kernel-Operators/1771579795170.png)
-![1771579806566](image/Kernel-Operators/1771579806566.png)
+### 3.2.1 核心命题 (Proposition)
+任何处理有限维向量的算法，只要该算法可以**仅用向量间的成对内积 (pairwise inner products)** 来表示，那么就可以通过将每一次内积计算替换为**核函数评估 (kernel evaluation)**，从而将该算法应用到正定核的特征空间中（即便是潜在的无限维空间）。
+
+**核技巧的巨大优势在于：**
+*   **无需显式计算高维内积**：不需要真正在高维的希尔伯特空间 (Hilbert space) 中去执行复杂的内积运算。
+*   **无需知道特征映射**：我们甚至根本不需要知道具体的特征映射函数 $\phi$ 是什么，只需要知道对应的核函数 $K$ 即可。
+
+### 3.2.2 示例：计算特征空间中的距离
+
+![1778748832613](image/Kernel-Operators/1778748832613.png)
+假设我们将点 $x_1$ 和 $x_2$ 映射到了高维特征空间，即 $\phi(x_1)$ 和 $\phi(x_2)$。即使不知道 $\phi$，我们依然可以使用核技巧计算它们在高维空间中的距离 $d_K(x_1, x_2)$。
+
+**推导过程：**
+距离的平方等于差向量的范数平方，将其展开为内积形式：
+$$d_K(x_1, x_2)^2 = \|\phi(x_1) - \phi(x_2)\|_{\mathcal{H}}^2$$
+$$= \langle \phi(x_1) - \phi(x_2), \phi(x_1) - \phi(x_2) \rangle_{\mathcal{H}}$$
+$$= \langle \phi(x_1), \phi(x_1) \rangle_{\mathcal{H}} + \langle \phi(x_2), \phi(x_2) \rangle_{\mathcal{H}} - 2\langle \phi(x_1), \phi(x_2) \rangle_{\mathcal{H}}$$
+利用核函数的定义 $K(x, x') = \langle \phi(x), \phi(x') \rangle_{\mathcal{H}}$，将所有内积替换为核函数：
+$$= K(x_1, x_1) + K(x_2, x_2) - 2K(x_1, x_2)$$
+*结论：特征空间中的距离完全可以通过在原空间计算核函数来获得。*
+
+### 3.2.3 核技巧总结与应用 (Summary)
+核技巧看似是一个简单的数学替换，但却有着极其重要的应用价值：
+
+1.  **算法的非线性化**：它可以用来获取经典线性算法的非线性版本。例如，在支持向量机 (SVM) 等算法中，将经典的内积替换为高斯核 (Gaussian kernel)，就能轻松处理非线性可分的数据。
+2.  **处理非向量数据**：它可以将原本只能处理数值向量的经典算法，推广应用到非向量化数据（例如：字符串、图结构）上。前提是我们能为这些特殊数据设计出一个有效的正定核。
+3.  **高维隐式嵌入**：在某些情况下，它允许我们将初始的低维空间嵌入到一个极大的特征空间中，并且能够处理特征空间中那些在原空间没有“原像 (pre-image)”的点（例如，特征空间中多个点的重心/barycenter 可能在原空间找不到对应的一个具体点，但核方法依然能对其进行计算和操作）。
+
+
+## 3.3 表示定理
+
+## 3.3.1 表示定理的动机 (Representer Theorem: Motivation)
+
+在希尔伯特空间 (Hilbert space) 中，范数 $\|f\|_{\mathcal{H}}$ 通常用来衡量函数 $f$ 的**平滑度 (smoothness)**。
+给定一组训练数据 $(x_i, y_i)_{i=1, \cdots, n}$，估计回归函数 $f: \mathcal{X} \rightarrow \mathbb{R}$ 的一个自然做法是求解以下最小化问题：
+$$\min_{f \in \mathcal{H}} \frac{1}{n} \sum_{i=1}^n \ell(f(x_i), y_i) + \lambda \|f\|_{\mathcal{H}}$$
+*   **左半部分**: 经验风险 (empirical risk / data fit)，例如平方损失 $\ell(y,t) = (y-t)^2$。
+*   **右半部分**: 正则化项 (regularization)，用于控制模型复杂度。
+
+**面临的挑战**：希尔伯特空间往往是潜在的无限维空间，如何在实践中求解这个无限维的优化问题？表示定理给出了完美的答案。
+
+
+### 3.3.2 表示定理的核心内容 (Representer Theorem)
+
+#### 定理定义
+设 $\chi$ 为配备正定核 $K$ 的集合，$\mathcal{H}$ 为对应的希尔伯特空间。$\mathcal{S} = \{x_1, \cdots, x_n\} \subset \chi$ 是一个有限数据子集。
+设 $\Psi: \mathbb{R}^{n+1} \rightarrow \mathbb{R}$ 是一个 $n+1$ 元函数，且对其**最后一个变量严格单调递增**。
+
+那么，对于优化问题：
+$$\min_{f \in \mathcal{H}} \Psi(f(x_1), \cdots, f(x_n), \|f\|_{\mathcal{H}})$$
+它的**任何解**都承认以下形式的表示：
+$$\forall x \in \chi, \quad f(x) = \sum_{i=1}^n \alpha_i K(x_i, x) = \sum_{i=1}^n \alpha_i K_{x_i}(x)$$
+
+![1778749654049](image/Kernel-Operators/1778749654049.png)
+
+
+
+#### 核心结论
+换言之，该定理证明了：尽管原本的搜索空间是无限维的，但最优解 $f$ 实际上完全存在于由训练样本构成的**有限维子空间 (finite-dimensional subspace)** 中，即：
+$$f \in \text{Span}\{K_{x_1}(x), \cdots, K_{x_n}(x)\}$$
+
+### 3.3.3 理论与实践意义 (Remarks & Consequences)
+
+在深度学习和一般机器学习中，目标函数 $\Psi$ 通常写为：
+$$\Psi(f(x_1), \cdots, f(x_n), \|f\|_{\mathcal{H}}) = c(f(x_1), \cdots, f(x_n)) + \Omega(\|f\|_{\mathcal{H}})$$
+其中 $c(\cdot)$ 衡量数据拟合度，$\Omega(\cdot)$ 严格递增。这带来了两个重要推论：
+
+1.  **理论意义 (Theoretically)**：最小化过程会迫使范数 $\|f\|_{\mathcal{H}}$ 变小，这能确保解具有足够的平滑度，从而达到**正则化效应 (regularization effect)**，防止过拟合。
+2.  **实践意义 (Practically)**：正如表示定理所指出的，解只存在于一个 $n$ 维子空间中。这使得即便希尔伯特空间本身是无限维的，我们依然能够设计出**高效的算法**来求解。
+
+
+### 3.3.4 核方法的双重解释与本质 (Dual interpretations)
+
+大多数核方法都有两种互补的解释方式：
+1.  **几何解释 (Geometric)**：得益于核技巧，将其视作在特征空间中的操作。即便特征空间巨大，核方法本质上也是在可用数据点嵌入后张成的“线性张成空间 (linear span)”中运作。
+2.  **函数解释 (Functional)**：将其视作在与核相关的希尔伯特空间（或其子集）上的优化问题。
+
+**表示定理的本质理解 (Why is it trivial?)**：
+表示定理虽然结论强大，但在底层逻辑上其实非常直观。
+我们在寻找一个函数 $f$，使得 $f(x) = \langle K_x, f \rangle_{\mathcal{H}}$。
+如果把 $f$ 分解为与数据点张成空间平行的部分和垂直（正交）的部分 $f_\perp$。那么正交部分 $f_\perp \perp K_{x_i}$ 对于解释训练数据 $x_i$ **毫无用处 (useless)**（因为内积为0）。而在加入正则化惩罚 $\|f\|_{\mathcal{H}}$ 后，优化器为了让目标函数最小，自然会把对预测毫无帮助的 $f_\perp$ 压缩为 0。因此，最终的解只能由数据点的线性组合构成。
+
+
+## 3.4 最小二乘回归
+
+### 3.4.1 经验风险最小化与正则化
+
+在一般的函数空间学习中，我们通常优化以下目标函数：
+$$\min_{f \in \mathcal{H}} \frac{1}{n} \sum_{i=1}^n \ell(f(x_i), y_i) + \lambda \|f\|_{\mathcal{H}}$$
+*   **前一项 (Empirical risk, data fit)**: 衡量模型对训练数据的拟合程度。
+*   **后一项 (Regularization)**: 范数惩罚项，用于控制模型复杂度。
+
+### 3.4.2 正则化的重要性与核的选择
+*   **防止过拟合**: 正则化对于防止模型过拟合至关重要，特别是在处理高维问题时。
+*   **线性与非线性**: 
+    *   当输入空间为 $\mathbb{R}^d$ 且核 $K$ 是**线性核 (linear kernel)** 时，学习到的函数 $f$ 本质上就是一个**线性模型**。
+    *   当使用更一般的空间和核 $K$ 时，它不仅允许我们在具有天然正则化性质的函数空间中学习**非线性函数**，还能让我们处理**非向量化数据**（如字符串、图结构数据）。
+
+
+### 3.4.3 一般函数空间上的最小二乘回归
+
+#### 均方误差 (MSE)
+如果我们量化误差的损失函数定义为平方损失：
+$$\ell(f(x), y) = (y - f(x))^2$$
+那么在给定的函数空间 $\mathcal{H}$ 中，最小二乘回归的目的就是找到一个函数 $f$，使得经验风险（即均方误差 MSE）最小：
+$$\hat{f} \in \arg\min_{f \in \mathcal{H}} \frac{1}{n} \sum_{i=1}^n \ell(f(x_i), y_i)$$
+
+#### 存在的问题 (Issue)
+如果不加限制地直接优化上述目标，特别是在高维空间中，算法会非常**不稳定 (unstable)**。如果选择的函数空间 $\mathcal{H}$ 过于庞大和灵活，模型将极易发生**过拟合 (overfitting)**。
+
+
+## 3.5 核岭回归 (Kernel Ridge Regression, KRR)
+
+为了解决单纯最小化 MSE 带来的过拟合问题，我们引入了**核岭回归 (KRR)**。
+
+### 3.5.1 KRR 的定义
+设 $\mathcal{H}$ 是与集合 $\mathcal{X}$ 上的正定核 $K$ 相关联的希尔伯特空间。KRR 是通过在 MSE 准则上添加希尔伯特空间范数正则化项而获得的：
+$$\hat{f} \in \arg\min_{f \in \mathcal{H}} \frac{1}{n} \sum_{i=1}^n \ell(f(x_i), y_i) + \lambda \|f\|_{\mathcal{H}}^2$$
+
+### 3.5.2 主要特征与优势 (Main feature and advantages)
+1.  **惩罚不平滑函数**: 通过引入 $\|f\|_{\mathcal{H}}^2$ 作为惩罚项，KRR 倾向于选择更平滑的函数，从而有效防止过拟合。
+2.  **简化求解过程**: 根据上一节的**表示定理 (Representer Theorem)**，我们已知该无限维优化问题的任何解都可以表示为有限个核函数的线性组合形式：
+    $$\hat{f}(x) = \sum_{i=1}^n \alpha_i K(x_i, x)$$
+    这极大地简化了 KRR 的求解，将原本在无限维空间中的函数搜索，转化为求解 $n$ 个参数 $\alpha_i$ 的有限维代数问题。
+
+### 3.5.3 核岭回归的等价代数形式 (Equivalent version: KRR)
+
+基于表示定理，我们已知函数解具有形式 $f(x) = \sum_{i=1}^n \alpha_i K(x_i, x)$。为了在计算机中实际求解，我们需要将其转化为关于参数向量 $\alpha$ 的代数问题。
+
+#### 变量与符号定义
+*   **标签向量**: $y = (y_1, \cdots, y_n)^T \in \mathbb{R}^n$
+*   **参数向量**: $\alpha = (\alpha_1, \cdots, \alpha_n)^T \in \mathbb{R}^n$
+*   **Gram 矩阵 (核矩阵)**: $\mathbb{K}$ 是一个 $n \times n$ 的矩阵，其中 $\mathbb{K}_{ij} = K(x_i, x_j)$
+
+#### 目标的等价转换
+在此设定下，模型对所有训练样本的预测值向量以及函数的希尔伯特空间范数可以表示为：
+*   预测值: $(\hat{f}(x_1), \cdots, \hat{f}(x_n))^T = \mathbb{K}\alpha$
+*   函数范数: $\|\hat{f}\|_{\mathcal{H}}^2 = \alpha^T \mathbb{K}\alpha$
+
+将上述代数表示代入原始的 KRR 目标函数中，**原始的 KRR 问题等价于求解以下关于 $\alpha$ 的优化问题**：
+$$\arg\min_{\alpha \in \mathbb{R}^n} \frac{1}{n}(\mathbb{K}\alpha - y)^T(\mathbb{K}\alpha - y) + \lambda \alpha^T \mathbb{K}\alpha$$
+
+![1778752166056](image/Kernel-Operators/1778752166056.png)
+
+### 3.5.4 求解等价版本及详细推导 (Solving equivalent version)
+
+定义目标函数为 $F(\alpha) := \frac{1}{n}(\mathbb{K}\alpha - y)^T(\mathbb{K}\alpha - y) + \lambda \alpha^T \mathbb{K}\alpha$。
+该目标函数相对于参数 $\alpha$ 是**凸的 (convex)** 且**可微的 (differentiable)**，因此可以通过令其梯度 $\nabla F = \mathbf{0}$ 来求得最小值。
+
+#### 课件结论
+根据幻灯片给出的结果，目标函数对 $\alpha$ 的梯度为：
+$$\nabla F = \frac{2}{n} \mathbb{K} ((\mathbb{K} + \lambda n \mathbb{I})\alpha - y)$$  
+
+由于正则化系数 $\lambda > 0$ 且 $\mathbb{K}$ 是半正定矩阵，矩阵 $(\mathbb{K} + \lambda n \mathbb{I})$ 必定可逆。令 $\nabla F = \mathbf{0}$，得出最优解 $\alpha$ 的形式为：
+$$\alpha = (\mathbb{K} + \lambda n \mathbb{I})^{-1} y + \text{Ker}(\mathbb{K})$$
+
+#### 补充：详细推导步骤 (Detailed Derivation)
+
+为了让您更清晰地理解上述结论是如何得出的，以下是完整的、不跳步的数学推导过程：
+
+#### 第一步：展开目标函数 $F(\alpha)$
+首先，我们将经验风险（均方误差）部分展开：
+$$(\mathbb{K}\alpha - y)^T(\mathbb{K}\alpha - y) = (\alpha^T \mathbb{K}^T - y^T)(\mathbb{K}\alpha - y)$$
+$$= \alpha^T \mathbb{K}^T \mathbb{K}\alpha - \alpha^T \mathbb{K}^T y - y^T \mathbb{K}\alpha + y^T y$$
+
+因为 Gram 矩阵 $\mathbb{K}$ 是对称矩阵，所以 $\mathbb{K}^T = \mathbb{K}$。此外，由于 $\alpha^T \mathbb{K} y$ 最终得到的是一个标量，标量的转置等于自身，即 $\alpha^T \mathbb{K} y = (\alpha^T \mathbb{K} y)^T = y^T \mathbb{K}^T \alpha = y^T \mathbb{K} \alpha$。因此中间两项可以合并：
+$$= \alpha^T \mathbb{K}^2 \alpha - 2y^T \mathbb{K} \alpha + y^T y$$
+
+将展开后的结果代回原目标函数：
+$$F(\alpha) = \frac{1}{n} (\alpha^T \mathbb{K}^2 \alpha - 2y^T \mathbb{K} \alpha + y^T y) + \lambda \alpha^T \mathbb{K} \alpha$$
+
+#### 第二步：计算关于 $\alpha$ 的梯度 $\nabla F$
+我们需要用到矩阵求导的基本法则：对于对称矩阵 $A$，$\nabla_\alpha (\alpha^T A \alpha) = 2A\alpha$；对于向量 $c$，$\nabla_\alpha (c^T \alpha) = c$。
+
+对 $F(\alpha)$ 的各项分别求导：
+1.  $\nabla_\alpha (\alpha^T \mathbb{K}^2 \alpha) = 2\mathbb{K}^2 \alpha$
+2.  $\nabla_\alpha (-2y^T \mathbb{K} \alpha) = -2\mathbb{K}^T y = -2\mathbb{K}y$
+3.  $\nabla_\alpha (y^T y) = 0$ (与 $\alpha$ 无关)
+4.  $\nabla_\alpha (\lambda \alpha^T \mathbb{K} \alpha) = 2\lambda \mathbb{K}\alpha$
+
+将所有求导结果相加：
+$$\nabla F = \frac{1}{n} (2\mathbb{K}^2 \alpha - 2\mathbb{K}y) + 2\lambda \mathbb{K}\alpha$$
+
+提取公因式 $\frac{2}{n}\mathbb{K}$：
+$$\nabla F = \frac{2}{n}\mathbb{K}^2 \alpha - \frac{2}{n}\mathbb{K}y + \frac{2\lambda n}{n}\mathbb{K}\alpha$$
+$$\nabla F = \frac{2}{n}\mathbb{K} \Big[ \mathbb{K}\alpha - y + \lambda n \alpha \Big]$$
+$$\nabla F = \frac{2}{n}\mathbb{K} \Big[ (\mathbb{K} + \lambda n \mathbb{I})\alpha - y \Big]$$
+*(至此，成功推导出了课件中的梯度表达式。)*
+
+#### 第三步：令梯度为 0 求解最优 $\alpha$
+令 $\nabla F = \mathbf{0}$：
+$$\frac{2}{n}\mathbb{K} \Big[ (\mathbb{K} + \lambda n \mathbb{I})\alpha - y \Big] = \mathbf{0}$$
+
+这说明，向量 $\Big[ (\mathbb{K} + \lambda n \mathbb{I})\alpha - y \Big]$ 乘上矩阵 $\mathbb{K}$ 后等于零向量。在线性代数中，这意味着**该向量属于矩阵 $\mathbb{K}$ 的零空间 (Null space)**，即 $\text{Ker}(\mathbb{K})$。
+
+因此，我们可以将其写为：
+$$(\mathbb{K} + \lambda n \mathbb{I})\alpha - y = v, \quad \text{其中 } v \in \text{Ker}(\mathbb{K})$$
+$$(\mathbb{K} + \lambda n \mathbb{I})\alpha = y + v$$
+
+前面提到，因为 $\lambda>0$ 且 $\mathbb{K}$ 半正定，矩阵 $(\mathbb{K} + \lambda n \mathbb{I})$ 是严格正定的，故必定可逆。两边同时左乘其逆矩阵：
+$$\alpha = (\mathbb{K} + \lambda n \mathbb{I})^{-1}(y + v)$$
+$$\alpha = (\mathbb{K} + \lambda n \mathbb{I})^{-1}y + (\mathbb{K} + \lambda n \mathbb{I})^{-1}v$$
+
+**最后，为什么 $(\mathbb{K} + \lambda n \mathbb{I})^{-1}v$ 直接等效于 $\text{Ker}(\mathbb{K})$ 呢？**
+因为 $v \in \text{Ker}(\mathbb{K})$，所以定义上必定有 $\mathbb{K}v = \mathbf{0}$。
+我们可以计算 $(\mathbb{K} + \lambda n \mathbb{I})v = \mathbb{K}v + \lambda n \mathbb{I}v = \mathbf{0} + \lambda n v = \lambda n v$。
+由此推导：$v = (\mathbb{K} + \lambda n \mathbb{I})^{-1}(\lambda n v)$，进而得出 $(\mathbb{K} + \lambda n \mathbb{I})^{-1}v = \frac{1}{\lambda n}v$。
+由于 $\text{Ker}(\mathbb{K})$ 是一个线性子空间，空间中的向量乘上一个非零常数 $\frac{1}{\lambda n}$ 依然属于该空间。
+所以，包含所有可能解的完整形式就是：
+$$\alpha = (\mathbb{K} + \lambda n \mathbb{I})^{-1}y + \text{Ker}(\mathbb{K})$$
+
+*(注：在大多数机器学习的实际实现中，通常会直接取 $\text{Ker}(\mathbb{K}) = \mathbf{0}$ 的特解，即 $\alpha = (\mathbb{K} + \lambda n \mathbb{I})^{-1}y$，因为零空间部分对最终的模型预测结果 $\hat{f}(x) = \mathbb{K}\alpha$ 没有任何实际贡献)*
+
