@@ -550,3 +550,30 @@ $$\alpha = (\mathbb{K} + \lambda n \mathbb{I})^{-1}y + \text{Ker}(\mathbb{K})$$
 
 *(注：在大多数机器学习的实际实现中，通常会直接取 $\text{Ker}(\mathbb{K}) = \mathbf{0}$ 的特解，即 $\alpha = (\mathbb{K} + \lambda n \mathbb{I})^{-1}y$，因为零空间部分对最终的模型预测结果 $\hat{f}(x) = \mathbb{K}\alpha$ 没有任何实际贡献)*
 
+### 3.3.5 KRR 问题的极小值点唯一吗
+在上一节中，我们得出目标函数梯度为零的条件是：
+$$\mathbb{K} ((\mathbb{K} + \lambda n \mathbb{I})\alpha - y) = \mathbf{0}$$
+
+#### 多解性分析
+这个线性系统可能存在**多个解**。由于最外层乘了一个 $\mathbb{K}$ 矩阵后结果为零向量，这只意味着括号内的部分属于 $\mathbb{K}$ 的零空间（核，Kernel）：
+$$(\mathbb{K} + \lambda n \mathbb{I})\alpha - y \in \text{Ker}(\mathbb{K})$$
+
+#### 核心提示 (Hint)
+*   因为 Gram 矩阵 $\mathbb{K}$ 是对称的，它可以在标准正交基下对角化，并且其零空间与像空间相互正交：$\text{Ker}(\mathbb{K}) \perp \text{Im}(\mathbb{K})$。
+*   $\text{Ker}(\mathbb{K})$ 和 $\text{Im}(\mathbb{K})$ 在矩阵 $(\mathbb{K} + \lambda n \mathbb{I})^{-1}$ 的作用下是**不变的 (invariant)**。
+*   因此，上述等式可以进一步等价转换为：
+    $$\alpha - (\mathbb{K} + \lambda n \mathbb{I})^{-1}y \in \text{Ker}(\mathbb{K})$$
+
+#### 多解的等效性证明 (Exercise & Conclusion)
+
+假设我们取两个不同的解：
+*   **特解**: $\alpha^{(1)} = (\mathbb{K} + \lambda n \mathbb{I})^{-1}y$
+*   **通用解**: $\alpha^{(2)} = \alpha^{(1)} + v$，其中 $v$ 是任意属于 $\text{Ker}(\mathbb{K})$ 的非零向量。
+
+这两个解都满足梯度为零 $\nabla F(\alpha^{(j)}) = \mathbf{0}$。
+它们对应的预测函数分别为：$f^{(j)}(x) = \sum_{i=1}^n K(x, x_i)\alpha_i^{(j)}$，其中 $j = 1, 2$。
+
+#### 结论 (Conclusion)
+尽管 KRR 的参数解 $\alpha$ 不是唯一的，但这些不同的 $\alpha$：
+1.  **在目标函数中产生相同的值**：$F(\alpha^{(1)}) = F(\alpha^{(2)})$。*(注：课件原图中可能有排版笔误，正确表达应为两者目标函数值相等)*。
+2.  **在训练数据上的预测结果完全一致**：$f^{(1)}(x_i) = f^{(2)}(x_i)$ 对所有 $i = 1, \cdots, n$ 都成立。
